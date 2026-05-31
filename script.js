@@ -381,15 +381,24 @@ const commands = {
 };
 
 async function runRsvp() {
+    // 1. Tạo đoạn mã JavaScript ngay lập tức
+    const jsPayload = `document.body.innerHTML = '<div style="display:flex; height:100vh; width:100vw; background:#000; color:#0f0; justify-content:center; align-items:center; font-family:Consolas, Courier New, monospace; flex-direction:column; text-align:center; box-sizing:border-box; padding:20px; text-shadow: 0 0 10px #0f0;"><h1>[ RSVP CONFIRMED ]</h1><p>System updated. Thank you for accepting the invitation, ${currentUser}!</p><p style="font-size:50px; margin-top:20px;">🎓🎉</p></div>'; console.log('RSVP SUCCESS!');`;
+    
+    // 2. Thực hiện copy NGAY TRƯỚC KHI có bất kỳ độ trễ (await/sleep) nào
+    let isCopied = false;
+    try {
+        await navigator.clipboard.writeText(jsPayload);
+        isCopied = true; // Đánh dấu là đã copy thành công
+    } catch (err) {
+        isCopied = false; // Đánh dấu là thất bại (nếu bị trình duyệt chặn)
+    }
+
+    // 3. BÂY GIỜ mới bắt đầu các hiệu ứng gõ chữ và chờ đợi
     await typeLine("Generating RSVP token...", 30);
     await sleep(400);
-
-    // Tạo đoạn mã JavaScript để thay đổi giao diện DOM
-    const jsPayload = `document.body.innerHTML = '<div style="display:flex; height:100vh; width:100vw; background:#000; color:#0f0; justify-content:center; align-items:center; font-family:Consolas, Courier New, monospace; flex-direction:column; text-align:center; box-sizing:border-box; padding:20px; text-shadow: 0 0 10px #0f0;"><h1>[ RSVP CONFIRMED ]</h1><p>System updated. Thank you for accepting the invitation, ${currentUser}!</p><p style="font-size:50px; margin-top:20px;">🎓🎉</p></div>'; console.log('RSVP SUCCESS!');`;
-
-    try {
-        // Gọi API để copy vào clipboard
-        await navigator.clipboard.writeText(jsPayload);
+    
+    // 4. In ra thông báo dựa trên kết quả copy ở bước 2
+    if (isCopied) {
         await typeLine(`✅ SUCCESS: Confirmation script generated for ${currentUser}!`);
         await typeLine("The script has been copied to your clipboard.");
         await typeLine(" ");
@@ -398,8 +407,7 @@ async function runRsvp() {
         await typeLine("2. Navigate to the 'Console' tab.");
         await typeLine("3. Paste the code (Ctrl+V / Cmd+V) and press Enter.");
         await typeLine("Waiting for execution...");
-    } catch (err) {
-        // Dự phòng nếu trình duyệt chặn quyền copy
+    } else {
         await typeLine("❌ ERROR: Clipboard permission denied.");
         await typeLine("Please manually copy the following code, then paste it in your browser Console (F12):");
         await printHTML(`<span style="color:#aaa;">${jsPayload}</span>`);
