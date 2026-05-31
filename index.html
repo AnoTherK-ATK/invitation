@@ -2,10 +2,14 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Graduation OS - Linux Edition</title>
     <style>
-        /* CSS: Giữ nguyên giao diện Console retro của bản trước */
+        /* Đặt box-sizing mặc định để padding không làm sai lệch kích thước */
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             background-color: #000;
             color: #0f0;
@@ -28,12 +32,15 @@
             position: relative;
             overflow-y: auto;
             text-shadow: 0 0 5px #00ff00;
+            /* Tự động ngắt dòng nếu văn bản/link quá dài trên màn hình nhỏ */
+            word-wrap: break-word; 
+            overflow-wrap: break-word;
         }
 
         #monitor::after {
             content: " ";
             display: block;
-            position: absolute;
+            position: fixed; /* Đổi thành fixed để scanline phủ đều toàn màn hình */
             top: 0; left: 0; bottom: 0; right: 0;
             background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
             z-index: 2;
@@ -49,6 +56,7 @@
             margin-top: 15px;
             opacity: 1;
             transition: opacity 0.3s;
+            flex-wrap: wrap; /* Cho phép rớt dòng nếu prompt quá dài trên mobile */
         }
 
         .input-line.hidden { opacity: 0; pointer-events: none; }
@@ -62,6 +70,7 @@
             font-family: 'Consolas', 'Courier New', monospace; 
             font-size: 16px;
             flex-grow: 1;
+            min-width: 150px; /* Đảm bảo input không bị ép quá nhỏ */
             outline: none;
             text-shadow: 0 0 5px #00ff00;
         }
@@ -78,11 +87,47 @@
             animation: blink 1s step-end infinite;
         }
         
-        /* Tô màu thư mục và file để giống linux (ls command) */
         .file-txt { color: #fff; }
         .file-sh { color: #00ff00; font-weight: bold; }
         
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+        /* =========================================
+           THIẾT LẬP RESPONSIVE (Màn hình nhỏ)
+           ========================================= */
+        
+        /* Dành cho máy tính bảng (Tablet) */
+        @media (max-width: 768px) {
+            #monitor {
+                width: 95vw;
+                height: 95vh;
+                padding: 15px;
+                font-size: 15px;
+            }
+            input[type="text"] {
+                font-size: 15px;
+            }
+        }
+
+        /* Dành cho điện thoại di động (Mobile) */
+        @media (max-width: 480px) {
+            #monitor {
+                width: 100vw;
+                height: 100vh; /* Phủ kín toàn màn hình */
+                border-radius: 0; /* Bỏ góc bo tròn để giống terminal thật trên mobile */
+                padding: 10px;
+                border: none;
+                font-size: 14px; /* Giảm cỡ chữ để hiển thị được nhiều nội dung hơn */
+            }
+            
+            input[type="text"] {
+                font-size: 14px;
+            }
+            
+            .prompt {
+                margin-bottom: 5px; /* Cách ra một chút nếu thẻ input bị đẩy xuống dòng */
+            }
+        }
     </style>
 </head>
 <body>
@@ -161,13 +206,11 @@
 
                 await printHTML(`<span class="prompt">${promptElement.innerText}</span> ${rawCommand}`);
 
-                // Tách lệnh và các đối số (arguments)
                 const args = rawCommand.split(/\s+/);
                 const cmd = args[0].toLowerCase();
 
                 if (cmd === 'ls') {
-                    // Trình bày file giống lệnh ls trên linux
-                    await printHTML(`<span class="file-txt">readme.txt</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="file-txt">event_info.txt</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="file-sh">rsvp.sh</span>`);
+                    await printHTML(`<span class="file-txt">readme.txt</span>    <span class="file-txt">event_info.txt</span>    <span class="file-sh">rsvp.sh</span>`);
                 } 
                 else if (cmd === 'cat') {
                     const file = args[1];
@@ -209,7 +252,6 @@
                     if (!newName) {
                         await typeLine("su: usage: su [username]");
                     } else {
-                        // Cập nhật tên người dùng
                         currentUser = newName.toLowerCase();
                         promptElement.innerText = `${currentUser}@graduation:~$`;
                         await typeLine(`Switching user to ${currentUser}... [OK]`);
