@@ -362,13 +362,12 @@ const commands = {
         hidden: true,
         run: async () => {
             const banner = [
-                ' ░▒▓██████▓▒░░▒▓███████▓▒░ ░▒▓██████▓▒░▒▓████████▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓████████▓▒░▒▓███████▓▒░░▒▓█▓▒░░▒▓█▓▒░ ',
-                '░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░ ░▒▓█▓▒░   ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░      ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░ ',
-                '░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░ ░▒▓█▓▒░   ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░      ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░ ',
-                '░▒▓████████▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░ ░▒▓█▓▒░   ░▒▓████████▓▒░▒▓██████▓▒░ ░▒▓███████▓▒░░▒▓███████▓▒░  ',
-                '░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░ ░▒▓█▓▒░   ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░      ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░ ',
-                '░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░ ░▒▓█▓▒░   ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░      ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░ ',
-                '░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░░▒▓██████▓▒░  ░▒▓█▓▒░   ░▒▓█▓▒░░▒▓█▓▒░▒▓████████▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░',
+                " _  __     ____    _    ",
+                "| |/ /    |  _ \\  / \\   ",
+                "| ' /_____| | | |/ _ \\  ",
+                "| . \\_____| |_| / ___ \\ ",
+                "|_|\\_\\    |____/_/   \\_\\",
+
             ];
             await printPre(banner.join('\n'));
             await typeLine('Congratulations, Class of 2026! 🎓');
@@ -382,10 +381,29 @@ const commands = {
 };
 
 async function runRsvp() {
-    await typeLine("Running RSVP script...", 30);
+    await typeLine("Generating RSVP token...", 30);
     await sleep(400);
-    await typeLine(`Hello ${currentUser}, please confirm your attendance via the secure link:`);
-    await printHTML('👉 <a href="#" target="_blank">Google Form RSVP Link (might add later)</a>');
+
+    // Tạo đoạn mã JavaScript để thay đổi giao diện DOM
+    const jsPayload = `document.body.innerHTML = '<div style="display:flex; height:100vh; width:100vw; background:#000; color:#0f0; justify-content:center; align-items:center; font-family:Consolas, Courier New, monospace; flex-direction:column; text-align:center; box-sizing:border-box; padding:20px; text-shadow: 0 0 10px #0f0;"><h1>[ RSVP CONFIRMED ]</h1><p>System updated. Thank you for accepting the invitation, ${currentUser}!</p><p style="font-size:50px; margin-top:20px;">🎓🎉</p></div>'; console.log('RSVP SUCCESS!');`;
+
+    try {
+        // Gọi API để copy vào clipboard
+        await navigator.clipboard.writeText(jsPayload);
+        await typeLine(`✅ SUCCESS: Confirmation script generated for ${currentUser}!`);
+        await typeLine("The script has been copied to your clipboard.");
+        await typeLine(" ");
+        await typeLine("--- HOW TO EXECUTE ---");
+        await typeLine("1. Press F12 to open the Developer Tools (or right-click -> Inspect).");
+        await typeLine("2. Navigate to the 'Console' tab.");
+        await typeLine("3. Paste the code (Ctrl+V / Cmd+V) and press Enter.");
+        await typeLine("Waiting for execution...");
+    } catch (err) {
+        // Dự phòng nếu trình duyệt chặn quyền copy
+        await typeLine("❌ ERROR: Clipboard permission denied.");
+        await typeLine("Please manually copy the following code, then paste it in your browser Console (F12):");
+        await printHTML(`<span style="color:#aaa;">${jsPayload}</span>`);
+    }
 }
 
 async function bootSequence() {
@@ -405,7 +423,7 @@ async function bootSequence() {
     isTyping = false;
 }
 
-inputField.addEventListener('keydown', async function(event) {
+inputField.addEventListener('keydown', async function (event) {
 
     if (event.key === 'ArrowUp' && !isTyping) {
         event.preventDefault();
