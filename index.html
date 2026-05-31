@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -12,7 +13,7 @@
         body {
             background-color: #000;
             color: #0f0;
-            font-family: 'Consolas', 'Courier New', monospace; 
+            font-family: 'Consolas', 'Courier New', monospace;
             margin: 0;
             height: 100vh;
             overflow: hidden;
@@ -31,51 +32,71 @@
             position: relative;
             overflow-y: auto;
             text-shadow: 0 0 5px #00ff00;
-            word-wrap: break-word; 
+            word-wrap: break-word;
             overflow-wrap: break-word;
         }
 
         #monitor::after {
             content: " ";
             display: block;
-            position: fixed; 
-            top: 0; left: 0; bottom: 0; right: 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
             background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
             z-index: 2;
             background-size: 100% 4px, 6px 100%;
             pointer-events: none;
         }
 
-        .output-line { margin-bottom: 8px; line-height: 1.5; }
-        
+        .output-line {
+            margin-bottom: 8px;
+            line-height: 1.5;
+        }
+
         .input-line {
             display: flex;
             align-items: center;
             margin-top: 15px;
             opacity: 1;
             transition: opacity 0.3s;
-            flex-wrap: wrap; 
+            flex-wrap: wrap;
         }
 
-        .input-line.hidden { opacity: 0; pointer-events: none; }
+        .input-line.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
 
-        .prompt { margin-right: 10px; color: #0f0; font-weight: bold; }
+        .prompt {
+            margin-right: 10px;
+            color: #0f0;
+            font-weight: bold;
+        }
 
         input[type="text"] {
             background: transparent;
             border: none;
             color: #0f0;
-            font-family: 'Consolas', 'Courier New', monospace; 
+            font-family: 'Consolas', 'Courier New', monospace;
             font-size: 16px;
             flex-grow: 1;
-            min-width: 150px; 
+            min-width: 150px;
             outline: none;
             text-shadow: 0 0 5px #00ff00;
         }
 
-        a { color: #fff; text-decoration: underline; text-shadow: 0 0 5px #fff; }
-        a:hover { color: #0f0; }
-        
+        a {
+            color: #fff;
+            text-decoration: underline;
+            text-shadow: 0 0 5px #fff;
+        }
+
+        a:hover {
+            color: #0f0;
+        }
+
         .cursor {
             display: inline-block;
             width: 10px;
@@ -84,11 +105,27 @@
             vertical-align: middle;
             animation: blink 1s step-end infinite;
         }
-        
-        .file-txt { color: #fff; }
-        .file-sh { color: #00ff00; font-weight: bold; }
-        
-        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+        .file-txt {
+            color: #fff;
+        }
+
+        .file-sh {
+            color: #00ff00;
+            font-weight: bold;
+        }
+
+        @keyframes blink {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0;
+            }
+        }
 
         @media (max-width: 768px) {
             #monitor {
@@ -97,6 +134,7 @@
                 padding: 15px;
                 font-size: 15px;
             }
+
             input[type="text"] {
                 font-size: 15px;
             }
@@ -105,21 +143,74 @@
         @media (max-width: 480px) {
             #monitor {
                 width: 100vw;
-                height: 100vh; 
-                border-radius: 0; 
+                height: 100vh;
+                border-radius: 0;
                 padding: 10px;
                 border: none;
-                font-size: 14px; 
+                font-size: 14px;
             }
+
             input[type="text"] {
                 font-size: 14px;
             }
+
             .prompt {
-                margin-bottom: 5px; 
+                margin-bottom: 5px;
+            }
+        }
+
+        /* --- ĐỊNH DẠNG SCROLLBAR CHO FIREFOX --- */
+        #monitor {
+            scrollbar-width: thin;
+            scrollbar-color: #00FF00 #050505;
+        }
+
+        /* --- ĐỊNH DẠNG SCROLLBAR CHO CHROME, SAFARI, EDGE --- */
+        #monitor::-webkit-scrollbar {
+            width: 8px;
+            /* Độ rộng của thanh cuộn dọc */
+            height: 8px;
+            /* Độ cao của thanh cuộn ngang (nếu có) */
+        }
+
+        #monitor::-webkit-scrollbar-track {
+            background: #050505;
+            /* Màu nền của đường ray cuộn (khớp với nền monitor) */
+            border-radius: 0 15px 15px 0;
+            /* Bo góc khớp với viền màn hình monitor bên phải */
+        }
+
+        #monitor::-webkit-scrollbar-thumb {
+            background: rgba(0, 255, 0, 0.3);
+            /* Màu xanh lá mờ mặc định để không bị chói */
+            border-radius: 4px;
+            border: 1px solid rgba(0, 255, 0, 0.5);
+            /* Viền sáng hơn một chút để nổi bật */
+            box-shadow: inset 0 0 5px rgba(0, 255, 0, 0.2);
+        }
+
+        #monitor::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 255, 0, 0.8);
+            /* Xanh lá rực lên khi đưa chuột qua */
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.8);
+            /* Hiệu ứng tỏa sáng neon (Glow) */
+        }
+
+        /* Ở phần Media Query cho màn hình nhỏ (max-width: 480px), tôi cũng đã tinh chỉnh để thu hẹp thanh cuộn: */
+        @media (max-width: 480px) {
+            #monitor::-webkit-scrollbar-track {
+                border-radius: 0;
+                /* Bỏ bo góc vì màn hình mobile đã tràn viền */
+            }
+
+            #monitor::-webkit-scrollbar {
+                width: 4px;
+                /* Giảm một nửa độ rộng thanh cuộn để đỡ chiếm diện tích */
             }
         }
     </style>
 </head>
+
 <body>
     <div id="monitor">
         <div id="output"></div>
@@ -133,9 +224,9 @@
         const inputField = document.getElementById('cmd-input');
         const outputDiv = document.getElementById('output');
         const inputContainer = document.getElementById('input-container');
-        const promptElement = document.getElementById('cli-prompt'); 
-        
-        let isTyping = false; 
+        const promptElement = document.getElementById('cli-prompt');
+
+        let isTyping = false;
         let currentUser = "guest";
 
         const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
@@ -156,7 +247,7 @@
                 document.getElementById('monitor').scrollTop = document.getElementById('monitor').scrollHeight;
                 await sleep(delay);
             }
-            
+
             newLine.innerHTML = currentText;
         }
 
@@ -172,7 +263,7 @@
         async function bootSequence() {
             isTyping = true;
             inputContainer.classList.add('hidden');
-            
+
             await typeLine("Ubuntu 22.04 LTS graduation tty1", 10);
             await typeLine("Booting system... [OK]", 30);
             await typeLine("Mounting file systems... [OK]", 30);
@@ -180,25 +271,25 @@
             await printHTML("<br>");
             await typeLine("Welcome to Graduation OS!", 30);
             await typeLine("Type 'ls' to see available files, or 'cat readme.txt' for help.", 30);
-            
+
             inputContainer.classList.remove('hidden');
             inputField.focus();
             isTyping = false;
         }
 
         // Thay đổi sự kiện thành 'keydown' để bắt được phím 'Tab'
-        inputField.addEventListener('keydown', async function(event) {
-            
+        inputField.addEventListener('keydown', async function (event) {
+
             // CHỨC NĂNG TỰ ĐỘNG ĐIỀN (TAB COMPLETION)
             if (event.key === 'Tab' && !isTyping) {
                 event.preventDefault(); // Chặn hành động chuyển focus mặc định của trình duyệt
-                
+
                 const value = inputField.value;
                 if (!value.trim()) return; // Nếu ô nhập trống thì không làm gì
 
                 const words = value.split(' ');
                 const lastWord = words[words.length - 1].toLowerCase();
-                
+
                 if (lastWord === '') return; // Nếu vừa gõ dấu cách (từ cuối trống) thì không tính
 
                 // Khai báo danh sách file và lệnh để đối chiếu bản sao
@@ -208,7 +299,7 @@
                 if (words.length === 1) {
                     // Trường hợp 1: Người dùng mới gõ từ đầu tiên (Có thể là lệnh hoặc file thực thi trực tiếp)
                     const matches = [...commands, ...files].filter(item => item.startsWith(lastWord));
-                    
+
                     if (matches.length === 1) {
                         // Tự động thêm dấu cách sau các lệnh như cat, su, ls để gõ tiếp. Lệnh thực thi ./rsvp.sh hoặc file txt thì không cần.
                         const needsSpace = !matches[0].endsWith('.txt') && !matches[0].endsWith('.sh');
@@ -217,7 +308,7 @@
                 } else {
                     // Trường hợp 2: Người dùng gõ từ thứ 2 trở đi (Thường là tên file sau lệnh 'cat')
                     const matches = files.filter(file => file.startsWith(lastWord));
-                    
+
                     if (matches.length === 1) {
                         words[words.length - 1] = matches[0]; // Thay từ đang gõ dở bằng tên file đầy đủ
                         inputField.value = words.join(' '); // Ghép lại thành chuỗi hoàn chỉnh
@@ -227,9 +318,9 @@
 
             // CHỨC NĂNG XỬ LÝ LỆNH KHI NHẤN ENTER
             if (event.key === 'Enter' && !isTyping) {
-                const rawCommand = inputField.value.trim(); 
-                inputField.value = ''; 
-                
+                const rawCommand = inputField.value.trim();
+                inputField.value = '';
+
                 isTyping = true;
                 inputContainer.classList.add('hidden');
 
@@ -240,7 +331,7 @@
 
                 if (cmd === 'ls') {
                     await printHTML(`<span class="file-txt">readme.txt</span>    <span class="file-txt">event_info.txt</span>    <span class="file-sh">rsvp.sh</span>`);
-                } 
+                }
                 else if (cmd === 'cat') {
                     const file = args[1];
                     if (!file) {
@@ -258,7 +349,7 @@
                         await typeLine("  clear              : Clear the terminal screen");
                     } else if (file === 'event_info.txt') {
                         await typeLine("Accessing database...", 20);
-                        await sleep(300); 
+                        await sleep(300);
                         await typeLine("========================================");
                         await typeLine("🎓 K'S GRADUATION CEREMONY 🎓");
                         await typeLine("========================================");
@@ -269,13 +360,13 @@
                     } else {
                         await typeLine(`cat: ${file}: No such file or directory`);
                     }
-                } 
+                }
                 else if (cmd === './rsvp.sh' || (cmd === 'bash' && args[1] === 'rsvp.sh') || (cmd === 'sh' && args[1] === 'rsvp.sh')) {
                     await typeLine("Running RSVP script...", 30);
                     await sleep(400);
                     await typeLine(`Hello ${currentUser}, please confirm your attendance via the secure link:`);
                     await printHTML('👉 <a href="#" target="_blank">Google Form RSVP Link (might add later)</a>');
-                } 
+                }
                 else if (cmd === 'su') {
                     const newName = args[1];
                     if (!newName) {
@@ -285,16 +376,16 @@
                         promptElement.innerText = `${currentUser}@graduation:~$`;
                         await typeLine(`Switching user to ${currentUser}... [OK]`);
                     }
-                } 
+                }
                 else if (cmd === 'whoami') {
                     await typeLine(currentUser);
-                } 
+                }
                 else if (cmd === 'pwd') {
                     await typeLine(`/home/${currentUser}`);
-                } 
+                }
                 else if (cmd === 'clear') {
                     outputDiv.innerHTML = '';
-                } 
+                }
                 else if (cmd !== '') {
                     await typeLine(`${cmd}: command not found`);
                 }
@@ -306,10 +397,11 @@
         });
 
         document.getElementById('monitor').addEventListener('click', () => {
-            if(!isTyping) inputField.focus();
+            if (!isTyping) inputField.focus();
         });
 
         bootSequence();
     </script>
 </body>
+
 </html>
