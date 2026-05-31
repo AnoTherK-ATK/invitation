@@ -1,0 +1,113 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #000;
+    color: #0f0;
+    font-family: 'Consolas', 'Courier New', monospace;
+    margin: 0;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#monitor {
+    width: 90vw;
+    height: 90vh;
+    background: #050505;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 0 20px rgba(0, 255, 0, 0.2);
+    position: relative;
+    overflow-y: auto;
+    text-shadow: 0 0 5px #00ff00;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+#monitor::after {
+    content: " ";
+    display: block;
+    position: fixed;
+    top: 0; left: 0; bottom: 0; right: 0;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+    z-index: 2;
+    background-size: 100% 4px, 6px 100%;
+    pointer-events: none;
+}
+
+.output-line { margin-bottom: 8px; line-height: 1.5; }
+
+.input-line {
+    display: flex;
+    align-items: center;
+    margin-top: 15px;
+    opacity: 1;
+    transition: opacity 0.3s;
+    flex-wrap: wrap;
+}
+
+.input-line.hidden { opacity: 0; pointer-events: none; }
+
+.prompt { margin-right: 10px; color: #0f0; font-weight: bold; }
+
+input[type="text"] {
+    background: transparent;
+    border: none;
+    color: #0f0;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 16px;
+    flex-grow: 1;
+    min-width: 150px;
+    outline: none;
+    text-shadow: 0 0 5px #00ff00;
+}
+
+a { color: #fff; text-decoration: underline; text-shadow: 0 0 5px #fff; }
+a:hover { color: #0f0; }
+
+.cursor {
+    display: inline-block;
+    width: 10px;
+    height: 1.2em;
+    background-color: #0f0;
+    vertical-align: middle;
+    animation: blink 1s step-end infinite;
+}
+
+.file-txt { color: #fff; }
+.file-sh { color: #00ff00; font-weight: bold; }
+
+@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+@media (max-width: 768px) {
+    #monitor {
+        width: 95vw;
+        height: 95vh;
+        padding: 15px;
+        font-size: 15px;
+    }
+    input[type="text"] {
+        font-size: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    #monitor {
+        width: 100vw;
+        height: 100vh;
+        border-radius: 0;
+        padding: 10px;
+        border: none;
+        font-size: 14px;
+    }
+    input[type="text"] {
+        font-size: 14px;
+    }
+    .prompt {
+        margin-bottom: 5px;
+    }
+}
