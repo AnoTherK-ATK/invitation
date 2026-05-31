@@ -26,6 +26,33 @@ body {
     text-shadow: 0 0 5px #00ff00;
     word-wrap: break-word;
     overflow-wrap: break-word;
+    
+    /* --- ĐỊNH DẠNG SCROLLBAR CHO FIREFOX --- */
+    scrollbar-width: thin;
+    scrollbar-color: #00FF00 #050505;
+}
+
+/* --- ĐỊNH DẠNG SCROLLBAR CHO CHROME, SAFARI, EDGE --- */
+#monitor::-webkit-scrollbar {
+    width: 8px; /* Độ rộng của thanh cuộn dọc */
+    height: 8px; /* Độ cao của thanh cuộn ngang (nếu có) */
+}
+
+#monitor::-webkit-scrollbar-track {
+    background: #050505; /* Màu nền của đường ray cuộn */
+    border-radius: 0 15px 15px 0; /* Bo góc khớp với viền màn hình monitor */
+}
+
+#monitor::-webkit-scrollbar-thumb {
+    background: rgba(0, 255, 0, 0.3); /* Màu xanh lá mờ mặc định */
+    border-radius: 4px;
+    border: 1px solid rgba(0, 255, 0, 0.5); /* Viền sáng hơn một chút */
+    box-shadow: inset 0 0 5px rgba(0, 255, 0, 0.2);
+}
+
+#monitor::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 255, 0, 0.8); /* Xanh sáng hơn khi di chuột qua */
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.8); /* Tạo hiệu ứng neon phát sáng */
 }
 
 #monitor::after {
@@ -93,6 +120,9 @@ a:hover { color: #0f0; }
     input[type="text"] {
         font-size: 15px;
     }
+    #monitor::-webkit-scrollbar-track {
+        border-radius: 0 15px 15px 0;
+    }
 }
 
 @media (max-width: 480px) {
@@ -109,5 +139,11 @@ a:hover { color: #0f0; }
     }
     .prompt {
         margin-bottom: 5px;
+    }
+    #monitor::-webkit-scrollbar-track {
+        border-radius: 0; /* Tràn màn hình thì không bo góc đường ray nữa */
+    }
+    #monitor::-webkit-scrollbar {
+        width: 4px; /* Điện thoại thì làm thanh cuộn mảnh hơn */
     }
 }
